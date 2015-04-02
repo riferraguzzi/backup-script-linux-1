@@ -7,3 +7,5 @@
 ##Sintassi
 
 backup_script_linux TIPO_BACKUP DIRECTORY_SORGENTE DIRECTORY_DESTINAZIONE
+
+##Descrizione
