@@ -13,17 +13,17 @@ backup_script_linux TIPO_BACKUP DIRECTORY_SORGENTE DIRECTORY_DESTINAZIONE
 Lo script consente di eseguire un particolare tipo di backup dei file presenti nella directory sorgente, i quali verranno copiati all'interno della directory di destinazione.
 Lo script consente, in particolare, di eseguire tre tipologie di backup:
 
-*Backup completo, coinvolge tutti i file presenti nella directory sorgente
-*Backup incrementale, coinvolge i file presenti nella directory sorgente che sono stati modificati dall'ultimo backup
-*Backup differenziale, coinvolge i file presenti nella directory sorgente che sono stati modificati dall'ultimo backup completo
+* Backup completo, coinvolge tutti i file presenti nella directory sorgente
+* Backup incrementale, coinvolge i file presenti nella directory sorgente che sono stati modificati dall'ultimo backup
+* Backup differenziale, coinvolge i file presenti nella directory sorgente che sono stati modificati dall'ultimo backup completo
 
 Mentre è sempre possibile eseguire un backup completo, non sarà possibile eseguire un backup incrementale e differenziale se non sono presenti altri backup nella cartella.
 
 ##Input
 
-*TIPO_BACKUP: rappresenta la tipologia di backup che si vuole eseguire e può assumere tre valori: completo, incrementale e differenziale.
-*DIRECTORY_SORGENTE: rappresenta la directory dove sono localizzati i file dei quali si vuole eseguire il backup.
-*DIRECTORY_DESTINAZIONE: rappresenta la directory dove verranno copiati i file coinvolti nel processo di backup.
+* TIPO_BACKUP: rappresenta la tipologia di backup che si vuole eseguire e può assumere tre valori: completo, incrementale e differenziale.
+* DIRECTORY_SORGENTE: rappresenta la directory dove sono localizzati i file dei quali si vuole eseguire il backup.
+* DIRECTORY_DESTINAZIONE: rappresenta la directory dove verranno copiati i file coinvolti nel processo di backup.
 
 #Output
 
