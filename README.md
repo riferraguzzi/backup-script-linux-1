@@ -14,6 +14,7 @@ backup_script_linux TIPO_BACKUP DIRECTORY_SORGENTE DIRECTORY_DESTINAZIONE
 
 * Lo script assume che per il backup di diverse directory sorgente si utilizzino diverse directory di destinazione.
 * Lo script crea problemi se si cerca di eseguire due backup dello stesso tipo durante lo stesso minuto, a causa della modalità utilizzata per nominare le cartelle di destinazione dei vari backup poichè le due cartelle dovrebbero avere il medesimo nome (vedi sotto).
+* Lo script crea problemi se i nomi dei file di cui si vuole eseguire il backup contengono degli spazi.
 * Lo script non consente, al momento, di eseguire il backup di directory ma solo di file.
 
 Lo script consente di eseguire un particolare tipo di backup dei file presenti nella directory sorgente, i quali verranno copiati all'interno della directory di destinazione.
