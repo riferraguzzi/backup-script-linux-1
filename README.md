@@ -17,7 +17,7 @@ backup_script_linux TIPO_BACKUP DIRECTORY_SORGENTE DIRECTORY_DESTINAZIONE
 * Lo script non consente, al momento, di eseguire il backup di directory ma solo di file.
 
 Lo script consente di eseguire un particolare tipo di backup dei file presenti nella directory sorgente, i quali verranno copiati all'interno della directory di destinazione.
-Nella directory di destinazione lo script creerà una sottodirectory per ogni backup eseguito, la quale avrà come nome la data in cui è stato eseguito il backup seguita dalla tipologia di backup. La data viene scritta nella forma *AAAA/MM/GG/HH/mm* e, in particolar modo, il nome della cartella di destinazione di ogni backup avrà la seguente forma:
+Nella directory di destinazione lo script creerà una sottodirectory per ogni backup eseguito, la quale avrà come nome la data in cui è stato eseguito il backup seguita dalla tipologia di backup. La data viene scritta nella forma **AAAA/MM/GG/HH/mm** e, in particolar modo, il nome della cartella di destinazione di ogni backup avrà la seguente forma:
 
 **AAAAMMGGHHmm_tipoDiBackup.**
 
