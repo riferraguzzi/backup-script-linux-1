@@ -15,7 +15,7 @@ backup_script_linux TIPO_BACKUP DIRECTORY_SORGENTE DIRECTORY_DESTINAZIONE
 * Lo script assume che per il backup di diverse directory sorgente si utilizzino diverse directory di destinazione.
 * Lo script crea problemi se si cerca di eseguire due backup dello stesso tipo durante lo stesso minuto, a causa della modalità utilizzata per nominare le cartelle di destinazione dei vari backup poichè le due cartelle dovrebbero avere il medesimo nome (vedi sotto).
 * Lo script crea problemi se i nomi dei file di cui si vuole eseguire il backup contengono degli spazi.
-* Lo script non consente, al momento, di eseguire il backup di directory ma solo di file.
+* Lo script consente di eseguire il backup delle directory ma si tratta di una funzionalità limitata.
 
 Lo script consente di eseguire un particolare tipo di backup dei file presenti nella directory sorgente, i quali verranno copiati all'interno della directory di destinazione.
 Nella directory di destinazione lo script creerà una sottodirectory per ogni backup eseguito, la quale avrà come nome la data in cui è stato eseguito il backup seguita dalla tipologia di backup. La data viene scritta nella forma **AAAA/MM/GG/HH/mm** e, in particolar modo, il nome della cartella di destinazione di ogni backup avrà la seguente forma:
@@ -47,12 +47,12 @@ Mentre è sempre possibile eseguire un backup completo, non sarà possibile eseg
 * 1 La directory sorgente non è disponibile.
 * 2 La directory sorgente è vuota.
 * 3 La directory destinazione non è disponibile.
-* 4 Si sono verificati errori durante la copia di alcuni file.
+* 4 Si sono verificati errori durante la copia di alcuni file (non al momento funzionante).
 * 5 Non è stato trovato alcun backup completo nella cartella di destinazione.
 * 6 Non è stato trovato alcun backup nella cartella di destinazione.
 * 7 Il tipo di backup inserito non è stato riconosciuto.
 * 8 Omessi alcuni argomenti tra quelli necessari per l'esecuzione dello script.
-* 9 Backup non eseguito perchè non necessario.
+* 9 Backup non eseguito perchè non necessario (non al momento funzionante).
 
 ###STDOUT
 
