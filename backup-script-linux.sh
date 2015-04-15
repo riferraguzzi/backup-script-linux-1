@@ -73,9 +73,9 @@ else
 	fi
 fi
 
-echo $ultimaData
 
-`./copia_file.sh $1 $2 $3 $ultimaData $nomeCartellaBackup`
+`./copia_file.sh $1 $2 $3 $ultimaData $nomeCartellaBackup 0 $3`
+
 controllo=$?
 #Controlli necessari ad accertarsi della presenza di errori durante la copia dei file
 if [ $controllo -gt 0 ]
@@ -97,14 +97,6 @@ then
 				echo
 				echo "Attenzione! Si sono verificati degli errori durante la copia dei file!"
 				exit 4
-			else
-				if [ $controllo -eq 9 ]
-					then
-					echo
-					echo "Attenzione, nessun file cambiato dall'ultimo backup, backup non necessario!" >&2
-					rm  $3/${nomeCartellaBackup}_$1
-					exit 9
-				fi
 			fi
 		fi
 	fi

@@ -7,15 +7,15 @@ then
 	exit 1
 fi
 
+
 #Controllo necessario a verificare se la directory sorgente è vuota
 if [ `ls $2 | wc -l` -eq 0 ]
 then
 	exit 2
 fi
 
-total=0
-success=0
-err=0
+parziale=0
+total=$6
 
 
 mkdir $3/$5_$1
@@ -32,13 +32,15 @@ do
 	then
 		if [ `ls $2/$i | wc -l` -gt 0 ]
 		then
+			cartella=$i
 			mkdir $3/$5_$1/$i
-		`	./copia_file.sh $1 $2/$i $3/$5_$1/$i $4 $5`
+		`	./copia_file.sh $1 $2/$i $3/$5_$1/$i $4 $5 $total $7`
 		fi
 	else
 		if [[ $dataFile > $4 ]]
 		then
 			total=$((total+1))
+			parziale=$((parziale+1))
 			cp $2/$i $3/$5_$1
 			if [ $? -gt 0 ]
 			then
@@ -51,15 +53,10 @@ do
 	fi
 done
 
-if [ $err -gt 0 ]
-then
-	exit 4
-fi
 
-if [ $total -eq 0 ]
-then
-	exit 9
-fi
+	
+
+
 
 
 
