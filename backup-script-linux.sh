@@ -4,137 +4,117 @@
 if [ -z "$1" -o -z "$2" -o -z "$3" ]
 then
 	echo
-	echo "Attenzione! Argomenti non sufficienti indicare, in ordine, tipo di backup, directory sorgente, directory di destinazione"
+	echo 'Errore! Uno o più parametri mancanti!' >&2
+	echo "La sintassi corrretta è: $0 <tipo_backup> <directory_sorgente> <directory_destinazione>" >&2
 	exit 8
 fi
-#Salvataggio nella variabile "elencoFile" dei nomi dei file presenti nella directory sorgente.
-elencoFile=`ls $2`
-#Controllo necessario per verificare la disponibilità della directory sorgente.
+
+#Controlli necessari a verificare la disponibilità della directory sorgente
+nomiCartelleBackup=`ls $3`
 if [ $? -gt 0 ]
 then
 	echo
-	echo "Attenzione! Directory sorgente non disponibile!"
-	exit 1
-fi
-#Controllo necessario per verificare se la directory sorgente è vuota.
-if [ `ls $2 | wc -l` -eq 0 ]
-then
-	echo
-	echo "Attenzione! La directory sorgente è vuota!"
-	exit 2
-fi
-#Salvataggio nella variabile "elencoDirectory" dell'elenco delle directory di backup presenti nella directory di destinazione.
-elencoDirectory=`ls $3`
-if [ $? -gt 0 ]
-then
-	echo "Attenzione! Directory di destinazione non disponibile!"
+	echo "Attenzione, directory di destinazione non disponibile!" >&2
 	exit 3
 fi
-#Ottenimento dell'ultima data di backup.
+
+nomeCartellaBackup=`date +%Y%m%d%H%M`
+
+#Ottenimento data backup completo
 if [ $1 == 'completo' ]
 then
-	#Nel caso in il backup scelto sia completo, alla variabile "ultima_data" verrà assegnato valore 0, in modo da includere nel backup tutti i file 
-	#creati o modificati successivamente al 1/1/1970 (tutti i file).
-	ultima_data=0
+	ultimaData="1970-01-01-00:00"
 else
-	#Nel caso in cui il backup scelta sia incrementale, alla variabile "ultima_data" verranno assegnati i secondi passati tra il 1/1/1970 e la data di
-	#creazione o modifica dell'ultima cartella di backup.
+	ultimaData="1970-01-01-00:00"
+	#Ottenimento data backup incrementale
 	if [ $1 == 'incrementale' ]
 	then
-		elencoDirectory=`ls $3`
-		ultima_data=0
-		for i in $elencoDirectory
+		for i in $nomiCartelleBackup
 		do
-			dataIndice=`stat -c %Y $3/$i`
-			if [ $dataIndice -gt $ultima_data ]
+			dataCartella="${i:0:4}-${i:4:2}-${i:6:2}-${i:8:2}:${i:10:2}"
+			if [[ "$dataCartella" > "$ultimaData" ]]
 			then
-				ultima_data=$dataIndice
+				ultimaData=$dataCartella
 			fi
 		done
-			if [ $ultima_data -eq 0 ]
-				then
-					echo
-					echo "Errore! Nella directory di destinazione non è stato trovato alcun backup! Eseguire un backup, quindi riprovare!"
-					exit 6
-				fi
-		else
-			#Nel caso in cui il backup scelta sia incrementale, alla variabile "ultima_data" verranno assegnati i secondi passati tra il 1/1/1970 e la data di
-			#creazione o modifica della cartella contenente l'ultimo backup completo effettuato.
-			if [ $1 == 'differenziale' ]
-			then
-				ultima_data=0
-				for i in $elencoDirectory
-				do 
-					if [ ${i:13:8} == 'completo' ]
-					then
-						dataIndice=`stat -c %Y $3/$i`
-						if [ $dataIndice -gt $ultima_data ]
-						then
-							ultima_data=$dataIndice
-						fi
-					fi
-				done
-				if [ $ultima_data -eq 0 ]
-				then
-					echo
-					echo "Errore! Nella directory di destinazione non è stato trovato alcun backup completo! Eseguire un backup completo, quindi riprovare!"
-					exit 5
-				fi
-			else
-				echo
-				echo "Errore! Tipo di backup non riconosciuto!"
-				exit 7
-			fi
-		fi
-fi
-#Salvataggio in due variabili dei nomi dei file da copiare e del nome della cartella dove verrà salvato il backup.
-nomiFileDaCopiare=`ls $2`
-nomeCartellaBackup=`date +%Y%m%d%H%M`
-#Inizializzazione dei contatori necessari al calcolo del totale dei file da copiare, dei file copiati e dei file per cui sono stati evidenziati errori durante
-#la copia.
-total=0
-success=0
-err=0
-mkdir $3/${nomeCartellaBackup}_$1
-#Ciclo necessario all'esecuzione del backup.
-for i in $nomiFileDaCopiare
-do
-	data_file=`stat -c %Y $2/$i`
-	if [ $data_file -gt $ultima_data ]
-	then
-		total=$((total+1))
-		cp $2/$i $3/${nomeCartellaBackup}_$1
-		if [ $? -gt 0 ]
+		if [[ $ultimaData == '1970-01-01-00:00' ]]
 		then
-			echo 
-			echo "Impossibile eseguire il backup di $i" >&2
-			err=$((err+1))
+			echo
+			echo "Attenzione! Nella directory di destinazione non è stato trovato alcun backup! Eseguire un backup, quindi riprovare!" >&2
+			exit 6
+		fi
+	else
+		#Ottenimento data backup differenziale
+		if [ $1 == 'differenziale' ]
+		then
+			for i in $nomiCartelleBackup
+			do
+				dataCartella="${i:0:4}-${i:4:2}-${i:6:2}-${i:8:2}:${i:10:2}"
+				tipoBackup=${i:13:8}
+				if [ $tipoBackup == 'completo' ]
+				then
+					if [[ "$dataCartella" > "$ultimaData" ]]
+					then
+						ultimaData=$dataCartella
+					fi
+				fi
+			done
+			if [[ $ultimaData == '1970-01-01-00:00' ]]
+			then
+				echo
+				echo "Attenzione! Nella directory di destinazione non è stato trovato alcun backup completo! Eseguire un backup completo, quindi riprovare!" >&2
+				exit 5
+			fi
 		else
 			echo
-			echo "Backup di: $i avvenuto con successo"
-			success=$((success+1))
+			echo "Attenzione! Tipo di backup non riconosciuto!" >&2
+			exit 7
 		fi
 	fi
-done
-#Nel caso in cui il numero dei file totali, memorizzato nella variabile "total", alla fine del ciclo sia pari a 0 verrà visualizzato un avviso e lo script
-#restituirà l'exit code 9.
-if [ $total -eq 0 ]
+fi
+
+echo $ultimaData
+
+`./copia_file.sh $1 $2 $3 $ultimaData $nomeCartellaBackup`
+controllo=$?
+#Controlli necessari ad accertarsi della presenza di errori durante la copia dei file
+if [ $controllo -gt 0 ]
 then
-	echo
-	echo "Attenzione! Nessun file cambiato dall'ultimo backup, backup non necessario"
-	rmdir $3/${nomeCartellaBackup}_$1
-	exit 9
-#In caso contrario verrà visualizzato il report del backup.
+	if [ $controllo -eq 1 ]
+	then
+		echo
+		echo "Attenzione, directory sorgente non disponibile!" >&2
+		exit 1
+	else
+		if [ $controllo -eq 2 ]
+		then
+			echo
+			echo "Attenzione! La directory sorgente è vuota!" >&2
+			exit 2
+		else
+			if [ $controllo -eq 4 ]
+			then
+				echo
+				echo "Attenzione! Si sono verificati degli errori durante la copia dei file!"
+				exit 4
+			else
+				if [ $controllo -eq 9 ]
+					then
+					echo
+					echo "Attenzione, nessun file cambiato dall'ultimo backup, backup non necessario!" >&2
+					rm  $3/${nomeCartellaBackup}_$1
+					exit 9
+				fi
+			fi
+		fi
+	fi
 else
 	echo
-	echo "Backup Completato, numero di file copiati: $success su $total, numero di file per cui non è stato possibile eseguire il backup: $err"
-	#Nel caso in cui tutti i file siano stati copiati con successo lo script restituirà exit code 0.
-	if [ $err -eq 0 ]
-	then
-		exit 0
-	else
-		#Nel caso in cui si siano evidenziati errori durante la copia di alcuni file lo script restituirà exit code 4.
-		exit 4
-	fi
+	echo "Backup di tutti i file avvenuto con successo!"
+	exit 0
 fi
+
+
+
+
 
