@@ -34,7 +34,7 @@ do
 		then
 			cartella=$i
 			mkdir $3/$5_$1/$i
-		`	./copia_file.sh $1 $2/$i $3/$5_$1/$i $4 $5 $total $7`
+		`	./copia_file.sh $1 $2/$i $3/$5_$1/$i $4 $5`
 		fi
 	else
 		if [[ $dataFile > $4 ]]

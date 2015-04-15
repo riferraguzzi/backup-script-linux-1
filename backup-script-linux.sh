@@ -74,7 +74,7 @@ else
 fi
 
 
-`./copia_file.sh $1 $2 $3 $ultimaData $nomeCartellaBackup 0 $3`
+`./copia_file.sh $1 $2 $3 $ultimaData $nomeCartellaBackup`
 
 controllo=$?
 #Controlli necessari ad accertarsi della presenza di errori durante la copia dei file
